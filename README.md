@@ -21,7 +21,13 @@ Run the site check locally with `python3 tools/check_site.py site/index.html`.
 
 ## Deploy
 
-Static hosting on Cloudflare Pages. The site is a single file, so a deploy is an upload of `site/index.html`.
+Served by the Cloudflare Worker `gustavo-portfolio` as static assets (config in `wrangler.jsonc`), with `gustavo.rhinojedi.dev` attached as its custom domain.
+
+```bash
+npx wrangler deploy
+```
+
+Every deploy creates a Worker version, so a bad release rolls back with `npx wrangler rollback`.
 
 ## Related
 
