@@ -183,10 +183,10 @@
         </div>
       </div>
       <div class="case">
-        <div class="hd"><b>Case study: the gateway that almost delivered its own secret</b><span>aegis, open source · the full write-up is public in the <a href="https://github.com/rhinolands/aegis#the-destination-is-not-the-callers-to-choose" target="_blank" rel="noopener" style="color:var(--acc)">README</a></span></div>
+        <div class="hd"><b>Case study: threat-modeling my own gateway</b><span>aegis, open source · the full write-up is public in the <a href="https://github.com/rhinolands/aegis#the-destination-is-not-the-callers-to-choose" target="_blank" rel="noopener" style="color:var(--acc)">README</a></span></div>
         <dl>
-          <dt>Context</dt><dd>aegis injects a scoped backend credential into each agent call only after policy allows it, so the agent never holds the secret.</dd>
-          <dt>What broke</dt><dd>An early version let the caller name the upstream URL in the request body. An authenticated agent with one allowlisted tool could point the gateway at a server it controlled and receive the injected credential. The agent never held the secret. It made the gateway deliver it anywhere, which is the same thing.</dd>
+          <dt>Context</dt><dd>aegis injects a scoped backend credential into each agent call only after policy allows it, so the agent never holds the secret. The finding below was caught in review inside the pull request, before the code reached the main branch. It never shipped in a release.</dd>
+          <dt>The finding</dt><dd>The first cut of the planes let the caller name the upstream URL in the request body. An authenticated agent with one allowlisted tool could point the gateway at a server it controlled and receive the injected credential. The agent never held the secret. It made the gateway deliver it anywhere, which is the same thing.</dd>
           <dt>Root cause</dt><dd>The trust boundary covered the credential but not where the credential goes. The destination carries authority too. The same class of bug appeared once more on the LLM plane: a caller-supplied payload overrode the policy-approved model, so the audit named the wrong model and cost was metered at the wrong rate.</dd>
           <dt>The fix</dt><dd>Destinations now resolve server-side from the operator-registered agent and target record. The caller names a tool, peer or model, the gateway decides where it goes, and denies when nothing is registered. Redirects are rejected. Trusted values are applied last. Both fixes are locked by regression tests that were verified to fail when the fix is reverted.</dd>
           <dt>Lesson</dt><dd>Least privilege covers every input that carries authority: the secret, where it is sent, and which model runs.</dd>
