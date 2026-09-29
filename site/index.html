@@ -182,6 +182,16 @@
           <a class="btn ghost" href="https://github.com/rhinolands/aegis/blob/main/THREAT_MODEL.md" target="_blank" rel="noopener">Threat model (OWASP LLM Top 10) →</a>
         </div>
       </div>
+      <div class="case">
+        <div class="hd"><b>Case study: the gateway that almost delivered its own secret</b><span>aegis, open source · the full write-up is public in the <a href="https://github.com/rhinolands/aegis#the-destination-is-not-the-callers-to-choose" target="_blank" rel="noopener" style="color:var(--acc)">README</a></span></div>
+        <dl>
+          <dt>Context</dt><dd>aegis injects a scoped backend credential into each agent call only after policy allows it, so the agent never holds the secret.</dd>
+          <dt>What broke</dt><dd>An early version let the caller name the upstream URL in the request body. An authenticated agent with one allowlisted tool could point the gateway at a server it controlled and receive the injected credential. The agent never held the secret. It made the gateway deliver it anywhere, which is the same thing.</dd>
+          <dt>Root cause</dt><dd>The trust boundary covered the credential but not where the credential goes. The destination carries authority too. The same class of bug appeared once more on the LLM plane: a caller-supplied payload overrode the policy-approved model, so the audit named the wrong model and cost was metered at the wrong rate.</dd>
+          <dt>The fix</dt><dd>Destinations now resolve server-side from the operator-registered agent and target record. The caller names a tool, peer or model, the gateway decides where it goes, and denies when nothing is registered. Redirects are rejected. Trusted values are applied last. Both fixes are locked by regression tests that were verified to fail when the fix is reverted.</dd>
+          <dt>Lesson</dt><dd>Least privilege covers every input that carries authority: the secret, where it is sent, and which model runs.</dd>
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -226,16 +236,7 @@
         <div><b>7</b><span>local models, multi-modal</span></div>
         <div><b>24/7</b><span>operated solo</span></div>
       </div>
-      <div class="case">
-        <div class="hd"><b>Case study: a silent failure in a pipeline</b><span>scope: personal lab media pipeline · operated solo</span></div>
-        <dl>
-          <dt>Context</dt><dd>A self-hosted nightly pipeline that turns long-form media into searchable, cited knowledge: transcribe, chunk, embed, index.</dd>
-          <dt>What broke</dt><dd>It produced plausible but wrong transcripts for several nights before I noticed. The model laundered corrupted input into clean-looking output that read as correct.</dd>
-          <dt>Root cause</dt><dd>No invariant check between stages. "Looks fine" was passing for "is correct", and nothing in the pipeline could tell the difference.</dd>
-          <dt>The fix</dt><dd>Arithmetic sanity gates (words per minute, file size) at every stage, plus a staged rollout (fixture, canary, wave, soak), so a regression is caught on one item, never a whole batch.</dd>
-          <dt>Lesson</dt><dd>Reliability comes from gates that can prove a stage is wrong, instead of trusting output that looks right. The whole failure class is now caught automatically.</dd>
-        </dl>
-      </div>
+      <p class="lede" style="margin-top:26px;font-size:15px">What the lab taught me: a nightly pipeline once produced plausible but wrong transcripts for several nights before I noticed. Now every stage carries an arithmetic sanity gate and every change goes through a staged rollout, so a bad stage is caught on one item, never a whole batch.</p>
     </div>
   </section>
 
