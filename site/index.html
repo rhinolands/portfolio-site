@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gustavo Norymberg · Principal AI Platform &amp; Governance Architect</title>
+<meta name="description" content="Principal AI Platform and Governance Architect in Israel. I build the enforcement layer for AI agents: agent gateways, identity-aware RAG, and self-hosted inference. Author of aegis, an open-source agent-governance gateway.">
+<meta property="og:title" content="Gustavo Norymberg · Principal AI Platform &amp; Governance Architect">
+<meta property="og:description" content="I build the enforcement layer for AI agents: agent gateways, identity-aware RAG, and self-hosted inference. Author of aegis, an open-source agent-governance gateway.">
+<meta property="og:url" content="https://gustavo.rhinojedi.dev/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2308090a'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' fill='%232DD9F0' text-anchor='middle'%3EGN%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090a;
+    --bg-2: #0d0f11;
+    --line: rgba(255,255,255,.08);
+    --line-2: rgba(255,255,255,.12);
+    --head: #e6e8ea;
+    --text: #c7ccd1;
+    --muted: #9aa1a9;
+    --dim: #6b727b;
+    --acc: #2DD9F0;
+    --mono: 'Geist Mono', ui-monospace, monospace;
+    --sans: 'Geist', system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  header.nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(14px); background: rgba(8,9,10,.7); border-bottom: 1px solid var(--line); }
+  header.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+  .brand { font-family: var(--mono); font-size: 13px; color: var(--head); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .brand b { color: var(--acc); border: 1px solid rgba(45,217,240,.35); border-radius: 6px; padding: 2px 6px; font-weight: 600; }
+  nav.links { display: flex; gap: 22px; font-family: var(--mono); font-size: 12.5px; }
+  nav.links a { color: var(--dim); text-decoration: none; }
+  nav.links a:hover { color: var(--acc); }
+
+  section { padding: 88px 0 24px; }
+  .label { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; color: var(--acc); text-transform: uppercase; display: flex; align-items: center; gap: 14px; }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  h2 { margin-top: 18px; font-size: clamp(26px, 3.6vw, 40px); line-height: 1.12; letter-spacing: -.02em; color: var(--head); font-weight: 600; max-width: 760px; }
+  .lede { margin-top: 16px; font-size: 17px; color: var(--muted); max-width: 720px; }
+
+  /* hero */
+  .hero { padding: 96px 0 40px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--acc); border: 1px solid rgba(45,217,240,.35); border-radius: 999px; padding: 5px 12px; background: rgba(45,217,240,.06); }
+  .badge i { width: 7px; height: 7px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 10px var(--acc); }
+  .hero h1 { margin-top: 26px; font-size: clamp(44px, 7.5vw, 84px); line-height: 1; letter-spacing: -.035em; color: var(--head); font-weight: 600; }
+  .role { margin-top: 18px; font-family: var(--mono); font-size: clamp(14px, 1.8vw, 18px); color: var(--acc); }
+  .hero .tag { margin-top: 20px; font-size: clamp(17px, 2vw, 21px); color: var(--text); max-width: 760px; line-height: 1.5; }
+  .hero .sub { margin-top: 12px; font-size: 16px; color: var(--muted); max-width: 700px; }
+  .ctas { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { font-family: var(--mono); font-size: 13.5px; text-decoration: none; border-radius: 9px; padding: 12px 18px; display: inline-flex; align-items: center; gap: 8px; }
+  .btn.primary { background: var(--acc); color: #041014; font-weight: 600; box-shadow: 0 0 28px rgba(45,217,240,.25); }
+  .btn.ghost { border: 1px solid var(--line-2); color: var(--head); }
+  .btn.ghost:hover { border-color: var(--acc); color: var(--acc); }
+  .proof { margin-top: 44px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .proof div { padding: 16px 18px; border-right: 1px solid var(--line); }
+  .proof div:last-child { border-right: 0; }
+  .proof b { display: block; font-family: var(--mono); font-size: 20px; color: var(--head); font-weight: 600; }
+  .proof span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+
+  /* cards */
+  .grid { margin-top: 36px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 22px; transition: border-color .2s, transform .2s; }
+  .card:hover { border-color: rgba(45,217,240,.35); transform: translateY(-2px); }
+  .card .k { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--acc); text-transform: uppercase; }
+  .card h3 { margin-top: 10px; font-size: 18px; color: var(--head); font-weight: 600; line-height: 1.3; }
+  .card p { margin-top: 10px; font-size: 15px; color: var(--muted); }
+  .card a.more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 12.5px; color: var(--acc); text-decoration: none; }
+  .tags { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { font-family: var(--mono); font-size: 11px; color: var(--dim); border: 1px solid var(--line); border-radius: 5px; padding: 3px 7px; }
+
+  /* flagship */
+  .flag { margin-top: 36px; border: 1px solid rgba(45,217,240,.28); border-radius: 16px; background: linear-gradient(180deg, rgba(45,217,240,.05), rgba(45,217,240,0) 60%), var(--bg-2); padding: 30px; }
+  .flag .top { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+  .flag .name { font-family: var(--mono); font-size: 22px; color: var(--head); font-weight: 600; }
+  .flag .meta { font-family: var(--mono); font-size: 12px; color: var(--dim); }
+  .flag .what { margin-top: 14px; font-size: 17px; color: var(--text); max-width: 820px; }
+  .controls { margin-top: 24px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .controls div { border-top: 1px solid var(--line); padding-top: 14px; }
+  .controls b { display: block; color: var(--head); font-size: 15px; font-weight: 600; }
+  .controls p { margin-top: 6px; font-size: 14px; color: var(--muted); }
+  .planes { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
+  .planes em { color: var(--acc); font-style: normal; }
+  .flag .ctas { margin-top: 24px; }
+
+  /* case study */
+  .case { margin-top: 28px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .case .hd { padding: 18px 22px; border-bottom: 1px solid var(--line); background: var(--bg-2); }
+  .case .hd b { color: var(--head); font-size: 17px; }
+  .case .hd span { display: block; margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+  .case dl { display: grid; grid-template-columns: 140px 1fr; }
+  .case dt, .case dd { padding: 14px 22px; border-bottom: 1px solid var(--line); }
+  .case dt { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; color: var(--acc); text-transform: uppercase; }
+  .case dd { font-size: 15px; color: var(--text); }
+  .case dl > *:nth-last-child(-n+2) { border-bottom: 0; }
+
+  .principles { margin-top: 32px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .principles div { border-left: 2px solid var(--acc); padding: 4px 0 4px 16px; }
+  .principles b { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--head); text-transform: uppercase; }
+  .principles p { margin-top: 6px; font-size: 15px; color: var(--muted); }
+
+  .contact { text-align: center; padding: 100px 0 80px; }
+  .contact h2 { margin: 18px auto 0; }
+  .contact .lede { margin: 16px auto 0; }
+  .contact .ctas { justify-content: center; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 720px) {
+    nav.links { display: none; }
+    .case dl { grid-template-columns: 1fr; }
+    .case dt { border-bottom: 0; padding-bottom: 0; }
+    .proof div { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><b>GN</b> Gustavo Norymberg</a>
+    <nav class="links">
+      <a href="#aegis">aegis</a>
+      <a href="#enterprise">enterprise</a>
+      <a href="#repos">repos</a>
+      <a href="#lab">lab</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge"><i></i> Open to Principal / Staff AI roles</span>
+      <h1>Gustavo Norymberg</h1>
+      <div class="role">Principal AI Platform &amp; Governance Architect</div>
+      <p class="tag">I build the enforcement layer for AI: agent gateways, identity-aware RAG, and self-hosted inference, on zero-trust foundations.</p>
+      <p class="sub">Twenty years in enterprise infrastructure and network security. Now I design and govern the agent and LLM platforms that regulated enterprises run in production.</p>
+      <div class="ctas">
+        <a class="btn primary" href="https://github.com/rhinolands/aegis" target="_blank" rel="noopener">aegis on GitHub →</a>
+        <a class="btn ghost" href="#contact">Get in touch</a>
+      </div>
+      <div class="proof">
+        <div><b>aegis</b><span>open-source agent gateway</span></div>
+        <div><b>OWASP LLM Top 10</b><span>published threat model</span></div>
+        <div><b>20 years</b><span>infra + network security</span></div>
+        <div><b>4 teams · 27</b><span>people led</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="aegis">
+    <div class="wrap">
+      <div class="label">01 / Flagship</div>
+      <h2>One enforcement point for every agent action.</h2>
+      <p class="lede">You cannot reliably detect every hostile instruction an agent reads. You can decide what it is allowed to do. That is the job of an enforcement point.</p>
+      <div class="flag">
+        <div class="top">
+          <span class="name">aegis</span>
+          <span class="meta">TypeScript + Postgres · tested · CI · Apache-2.0</span>
+        </div>
+        <p class="what">An open-source agent-governance gateway. It sits between AI agents and the tools, peer agents and models they call, and decides every action before it runs. Built for regulated environments where routing agent traffic through a SaaS is a non-starter.</p>
+        <div class="controls">
+          <div><b>Deny by default</b><p>OPA/Rego policy compiled to WASM and evaluated in-process. An unknown tool, peer or model is denied without a rule needing to exist.</p></div>
+          <div><b>Credentials the agent never holds</b><p>The gateway injects a scoped backend credential only after policy allows the call. A stolen agent key cannot reach the backend token.</p></div>
+          <div><b>Tamper-evident audit</b><p>Every allow and every deny is recorded in a hash chain. An edited, deleted or reordered record is caught on verification.</p></div>
+          <div><b>Fail closed</b><p>Unknown caller, policy error or upstream failure returns a denial plus an audit record. No path turns an error into an allow.</p></div>
+        </div>
+        <p class="planes">Four governed planes: <em>agent ingress</em> · <em>agent-to-agent delegation</em> · <em>MCP tool egress</em> · <em>LLM upstream</em></p>
+        <div class="ctas">
+          <a class="btn primary" href="https://github.com/rhinolands/aegis" target="_blank" rel="noopener">Repository →</a>
+          <a class="btn ghost" href="https://github.com/rhinolands/aegis/blob/main/THREAT_MODEL.md" target="_blank" rel="noopener">Threat model (OWASP LLM Top 10) →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="enterprise">
+    <div class="wrap">
+      <div class="label">02 / Enterprise work</div>
+      <h2>AI platforms, and the foundations underneath them.</h2>
+      <p class="lede">Selected engagements from enterprise delivery. Clients are not named.</p>
+      <div class="grid">
+        <div class="card"><div class="k">AI gateway</div><h3>Enforcement gateway for AI-agent traffic</h3><p>Built on Azure API Management: fail-closed JWT validation, app-role authorization, per-agent rate limiting, managed-identity backend auth, and every deny audited. Terraform on Azure Verified Modules, CI-gated.</p></div>
+        <div class="card"><div class="k">RAG</div><h3>Identity-aware retrieval</h3><p>Document-level security trimming with Entra ACLs enforced at retrieval, keyless and deny-by-default. The same user and query get a document cited or trimmed based on a single ACL value.</p></div>
+        <div class="card"><div class="k">Inference</div><h3>Self-hosted LLM tier for a regulated fintech</h3><p>Open-weight models on AKS GPU with vLLM, agent orchestration with input and output guardrails, and in-region data residency under the Israeli Credit Data Law. Full low-level design delivered.</p></div>
+        <div class="card"><div class="k">Landing zone</div><h3>Landing zone to production for a municipal government</h3><p>CAF-aligned design on the ALZ Accelerator with the Sovereignty Baseline, Microsoft Cloud Security Benchmark and Defender for Cloud, all in Terraform. Governance measured at CAF 85% across 380 policy assignments.</p></div>
+        <div class="card"><div class="k">Agent tooling</div><h3>Multi-agent delivery toolchain</h3><p>An internal toolchain of 7 purpose-built MCP servers and 50+ skills that produces customer deliverables and a reconciled billing-automation pipeline.</p></div>
+        <div class="card"><div class="k">Leadership</div><h3>Datacenter operations for a national telecom</h3><p>Owned hosting, co-location and datacenter operations around the clock. Led 4 teams, 27 people. Consolidated 4 facilities into 2 and re-platformed the network core with minimal customer downtime.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="repos">
+    <div class="wrap">
+      <div class="label">03 / Public repositories</div>
+      <h2>The governance model, in code you can read.</h2>
+      <div class="grid">
+        <div class="card"><div class="k">Azure deployment</div><h3>agent-gateway-apim</h3><p>The same governance model as an Azure API Management deployment: Terraform/AVM, Entra app-only identity, validate-JWT, managed identity to the backend. CI-validated and deploy-proven.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-apim" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">Design</div><h3>agent-gateway-a2a</h3><p>The HLD, LLD and threat model the gateway work is built on: one governed action surface, least-privilege persona tokens, propose then confirm on writes.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-a2a" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">MCP</div><h3>mcp-agent-starter</h3><p>A minimal MCP server with the security model production agents need: per-agent least privilege, an audit log, and a human-confirm gate on writes.</p><a class="more" href="https://github.com/rhinolands/mcp-agent-starter" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">Reference</div><h3>azure-ai-platform-reference-architecture</h3><p>A reference pattern for agentic AI on Azure, with a hands-on RAG security-trimming lab that proves retrieval under the user's own identity, including the real failure modes.</p><a class="more" href="https://github.com/rhinolands/azure-ai-platform-reference-architecture" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">Context engineering</div><h3>agent-knowledge-base</h3><p>An agent-readable knowledge base with a stdlib indexer that lints, chunks for RAG, and emits a capability map.</p><a class="more" href="https://github.com/rhinolands/agent-knowledge-base" target="_blank" rel="noopener">View repository →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="lab">
+    <div class="wrap">
+      <div class="label">04 / The lab</div>
+      <h2>My R&amp;D lab: where I test it before I recommend it.</h2>
+      <p class="lede">A two-node cluster I built and run 24/7, solo. Local multi-modal model serving, a cost-aware model router, agent automation, zero-trust identity at the edge, and observability with an off-cluster watchdog.</p>
+      <div class="proof">
+        <div><b>2</b><span>hypervisor nodes</span></div>
+        <div><b>~11</b><span>services + backup VM</span></div>
+        <div><b>7</b><span>local models, multi-modal</span></div>
+        <div><b>24/7</b><span>operated solo</span></div>
+      </div>
+      <div class="case">
+        <div class="hd"><b>Case study: a silent failure in a pipeline</b><span>scope: personal lab media pipeline · operated solo</span></div>
+        <dl>
+          <dt>Context</dt><dd>A self-hosted nightly pipeline that turns long-form media into searchable, cited knowledge: transcribe, chunk, embed, index.</dd>
+          <dt>What broke</dt><dd>It produced plausible but wrong transcripts for several nights before I noticed. The model laundered corrupted input into clean-looking output that read as correct.</dd>
+          <dt>Root cause</dt><dd>No invariant check between stages. "Looks fine" was passing for "is correct", and nothing in the pipeline could tell the difference.</dd>
+          <dt>The fix</dt><dd>Arithmetic sanity gates (words per minute, file size) at every stage, plus a staged rollout (fixture, canary, wave, soak), so a regression is caught on one item, never a whole batch.</dd>
+          <dt>Lesson</dt><dd>Reliability comes from gates that can prove a stage is wrong, instead of trusting output that looks right. The whole failure class is now caught automatically.</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="label">05 / How I work</div>
+      <h2>Four rules I hold every system to.</h2>
+      <div class="principles">
+        <div><b>Verified claims</b><p>Two independent sources and a math sanity check before any number ships.</p></div>
+        <div><b>Staged rollout</b><p>Fixture, canary, wave, soak. A fix never goes straight to a big batch.</p></div>
+        <div><b>Reuse first</b><p>Extend proven infrastructure. Never a parallel rebuild.</p></div>
+        <div><b>Enforced, then trusted</b><p>Anything a system must never do belongs in an enforced control that holds even when the model misbehaves.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="label" style="justify-content:center">06 / Contact</div>
+      <h2>Open to Principal and Staff AI architect roles.</h2>
+      <p class="lede">If you are building serious AI infrastructure and want someone who designs it, governs it and ships it, let's talk.</p>
+      <div class="ctas">
+        <a class="btn primary" href="mailto:rhinom@gmail.com">rhinom@gmail.com →</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/gustavonorymberg/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://github.com/rhinolands" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Gustavo Norymberg · Principal AI Platform &amp; Governance Architect</span>
+    <span>Israel · UTC+3 · open to remote</span>
+  </div>
+</footer>
+
+</body>
+</html>
