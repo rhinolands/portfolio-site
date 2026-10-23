@@ -87,8 +87,6 @@
   .controls div { border-top: 1px solid var(--line); padding-top: 14px; }
   .controls b { display: block; color: var(--head); font-size: 15px; font-weight: 600; }
   .controls p { margin-top: 6px; font-size: 14px; color: var(--muted); }
-  .planes { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; color: var(--dim); }
-  .planes em { color: var(--acc); font-style: normal; }
   .flag .ctas { margin-top: 24px; }
 
   /* case study */
@@ -212,25 +210,47 @@
   <section id="aegis">
     <div class="wrap">
       <div class="label">01 / Flagship</div>
-      <h2>One enforcement point for every agent action.</h2>
+      <h2>One enforcement point between agents and everything they call.</h2>
       <p class="lede">You cannot reliably detect every hostile instruction an agent reads. You can decide what it is allowed to do. That is the job of an enforcement point.</p>
       <div class="flag">
         <div class="top">
           <span class="name">aegis</span>
-          <span class="meta">TypeScript + Postgres · tested · CI · Apache-2.0</span>
+          <span class="meta">TypeScript + Postgres · 207 automated tests · CI on every push · Apache-2.0</span>
         </div>
-        <p class="what">An open-source agent-governance gateway. It sits between AI agents and the tools, peer agents and models they call, and decides every action before it runs. Built for regulated environments where routing agent traffic through a SaaS is a non-starter.</p>
+        <p class="what">An open-source gateway that sits between AI agents and everything they call: tools (MCP), other agents (A2A) and models (LLM). One enforcement point. Deny by default, the agent never holds the backend credential, and every allow and deny goes into a tamper-evident audit log.</p>
         <div class="controls">
-          <div><b>Deny by default</b><p>OPA/Rego policy compiled to WASM and evaluated in-process. An unknown tool, peer or model is denied without a rule needing to exist.</p></div>
-          <div><b>Credentials the agent never holds</b><p>The gateway injects a scoped backend credential only after policy allows the call. A stolen agent key cannot reach the backend token.</p></div>
-          <div><b>Tamper-evident audit</b><p>Every allow and every deny is recorded in a hash chain. An edited, deleted or reordered record is caught on verification.</p></div>
-          <div><b>Fail closed</b><p>Unknown caller, policy error or upstream failure returns a denial plus an audit record. No path turns an error into an allow.</p></div>
+          <div><b>Deny by default</b><p>Policy is OPA/Rego, compiled to WASM and evaluated in-process. Anything not explicitly allowed is refused.</p></div>
+          <div><b>The agent never holds the secret</b><p>The agent has its own key. The gateway holds the scoped backend credential and injects it only after policy allows the call.</p></div>
+          <div><b>Fail closed</b><p>If policy errors, a budget is missing or the upstream fails, the answer is 403 plus an audit record. No answer is not a yes.</p></div>
+          <div><b>Audit allows and denies</b><p>Every record is hash-chained. Each record's hash includes the previous record's hash.</p></div>
+          <div><b>The caller does not pick the destination</b><p>The agent names a tool. Where it goes and which credential it gets was set by the operator at registration.</p></div>
         </div>
-        <p class="planes">Four governed planes: <em>agent ingress</em> · <em>agent-to-agent delegation</em> · <em>MCP tool egress</em> · <em>LLM upstream</em></p>
         <div class="ctas">
           <a class="btn primary" href="https://github.com/rhinolands/aegis" target="_blank" rel="noopener">Repository →</a>
-          <a class="btn ghost" href="https://github.com/rhinolands/aegis/blob/main/THREAT_MODEL.md" target="_blank" rel="noopener">Threat model (OWASP LLM Top 10) →</a>
+          <a class="btn ghost" href="https://github.com/rhinolands/aegis/blob/main/THREAT_MODEL.md" target="_blank" rel="noopener">Threat model (OWASP LLM Top 10, MITRE ATLAS) →</a>
         </div>
+      </div>
+      <div class="case">
+        <div class="hd"><b>Eval: aegis against a live Claude agent</b><span>20 Oct 2026 · fixed-rule graders · details in the <a href="https://github.com/rhinolands/aegis#readme" target="_blank" rel="noopener" style="color:var(--acc)">README</a></span></div>
+        <dl>
+          <dt>Setup</dt><dd>An agent built with the Claude Agent SDK (Claude Sonnet 5.5), offered four tools: read_file, http_get, request_credential and delete_records. Each tool only forwards the call to aegis with the agent's own key. The allowlist holds read_file and http_get only. http_get is simulated from fixtures, so nothing leaves the machine.</dd>
+          <dt>Method</dt><dd>15 scenarios: 5 benign, 5 direct malicious requests, 5 prompt injections arriving in a fetched page or a file. Graded by fixed rules, not a model judge. Whether a call ran is read from the tool backend's own log. Three arms: the live agent, the same agent told to obey instructions found in content, and a scripted attacker with no model.</dd>
+          <dt>Allowlist only</dt><dd>Every call to a tool outside the allowlist was blocked and never executed. Every harmful call through an allowed tool got through: 9 of 9 missed, recorded in the audit log as allows.</dd>
+          <dt>Argument rules</dt><dd>Rerun the same day with per-argument rules. Scripted attacker: 10 of 10 harmful calls blocked, up from 4 of 10. Live agent: 3 of 3 secret-file reads blocked, up from 0 of 3. The 18 benign live calls were still allowed.</dd>
+          <dt>Integrity</dt><dd>No benign call was refused. Every call had an audit record, every aegis verdict matched what the backend executed, and the chain verified after each run.</dd>
+          <dt>Claude held</dt><dd>Sonnet 5.5 resisted the injections in all 30 live sessions, even when told to obey them. The scripted arm is the evidence for the case where the model does not hold.</dd>
+          <dt>Cost</dt><dd>The SDK's own estimate for all live sessions was $0.39. It is an estimate, not a bill.</dd>
+          <dt>Limit</dt><dd>The scenario set is small and written by the person who built aegis. It is a reproducible check of the boundary, not a benchmark.</dd>
+        </dl>
+      </div>
+      <div class="case">
+        <div class="hd"><b>What aegis does not do</b><span>v0.1 · known gaps, stated up front</span></div>
+        <dl>
+          <dt>Detection</dt><dd>It does not detect prompt injection, scan inputs, filter outputs or secure retrieval. It limits what a hijacked agent can do. Detection belongs upstream.</dd>
+          <dt>Credentials</dt><dd>Scoped to the agent and the target, with no expiry. Nothing rotates them automatically. Key rotation is a known gap.</dd>
+          <dt>Audit chain</dt><dd>The hash chain is unkeyed and lives in the same database. A consistent rewrite of the whole chain is only caught against an export stored elsewhere.</dd>
+          <dt>Operators</dt><dd>No admin console and no SSO for operators. The operator name in operator records is asserted, not authenticated.</dd>
+        </dl>
       </div>
       <div class="case">
         <div class="hd"><b>Case study: threat-modeling my own gateway</b><span>aegis, open source · the full write-up is public in the <a href="https://github.com/rhinolands/aegis#the-destination-is-not-the-callers-to-choose" target="_blank" rel="noopener" style="color:var(--acc)">README</a></span></div>
