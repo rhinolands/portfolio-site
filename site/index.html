@@ -215,9 +215,9 @@
       <div class="flag">
         <div class="top">
           <span class="name">aegis</span>
-          <span class="meta">TypeScript + Postgres · 216 automated tests · CI on every push · Apache-2.0</span>
+          <span class="meta">TypeScript + Postgres · 216 automated tests · CI on every pull request · Apache-2.0</span>
         </div>
-        <p class="what">An open-source gateway that sits between AI agents and everything they call: tools (MCP), other agents (A2A) and models (LLM). One enforcement point. Deny by default, the agent never holds the backend credential, and every allow and deny goes into a tamper-evident audit log.</p>
+        <p class="what">An open-source gateway that sits between AI agents and everything they call: tools (MCP), other agents (A2A) and models (LLM). One enforcement point. Deny by default, the agent never holds the backend credential, and every policy allow and deny goes into a tamper-evident audit log.</p>
         <div class="controls">
           <div><b>Deny by default</b><p>Policy is OPA/Rego, compiled to WASM and evaluated in-process. Anything not explicitly allowed is refused.</p></div>
           <div><b>The agent never holds the secret</b><p>The agent has its own key. The gateway holds the scoped backend credential and injects it only after policy allows the call.</p></div>
@@ -248,7 +248,8 @@
         <dl>
           <dt>Detection</dt><dd>It does not detect prompt injection, scan inputs, filter outputs or secure retrieval. It limits what a hijacked agent can do. Detection belongs upstream.</dd>
           <dt>Credentials</dt><dd>Scoped to the agent and the target, with no expiry. Nothing rotates them automatically. Key rotation is a known gap.</dd>
-          <dt>Audit chain</dt><dd>The hash chain is unkeyed and lives in the same database. A consistent rewrite of the whole chain is only caught against an export stored elsewhere.</dd>
+          <dt>Audit chain</dt><dd>The hash chain is unkeyed and lives in the same database. A consistent rewrite of the whole chain is only caught against an export stored elsewhere. Nothing schedules that export yet.</dd>
+          <dt>Erasure</dt><dd>Payloads are encrypted under a per-agent key, and a function to destroy that key exists. Nothing calls it yet, and erasure per person is not built.</dd>
           <dt>Operators</dt><dd>No admin console and no SSO for operators. The operator name in operator records is asserted, not authenticated.</dd>
         </dl>
       </div>
@@ -273,9 +274,9 @@
       <div class="grid">
         <div class="card"><div class="k">AI gateway</div><h3>Enforcement gateway for AI-agent traffic</h3><p>Built on Azure API Management: fail-closed JWT validation, app-role authorization, per-agent rate limiting, managed-identity backend auth, and every deny audited. Terraform on Azure Verified Modules, CI-gated.</p></div>
         <div class="card"><div class="k">RAG</div><h3>Identity-aware retrieval</h3><p>Document-level security trimming with Entra ACLs enforced at retrieval, keyless and deny-by-default. The same user and query get a document cited or trimmed based on a single ACL value.</p></div>
-        <div class="card"><div class="k">Inference</div><h3>Self-hosted LLM tier for a regulated fintech</h3><p>Open-weight models on AKS GPU with vLLM, agent orchestration with input and output guardrails, and in-region data residency under the Israeli Credit Data Law. Full low-level design delivered.</p></div>
-        <div class="card"><div class="k">Landing zone</div><h3>Landing zone to production for a municipal government</h3><p>CAF-aligned design on the ALZ Accelerator with the Sovereignty Baseline, Microsoft Cloud Security Benchmark and Defender for Cloud, all in Terraform. Governance measured at CAF 85% across 380 policy assignments.</p></div>
-        <div class="card"><div class="k">Agent tooling</div><h3>Multi-agent delivery toolchain</h3><p>An internal toolchain of 7 purpose-built MCP servers and 50+ skills that produces customer deliverables and a reconciled billing-automation pipeline.</p></div>
+        <div class="card"><div class="k">Inference</div><h3>Self-hosted LLM tier for a regulated enterprise</h3><p>Open-weight models on AKS GPU with vLLM, agent orchestration with input and output guardrails, and in-region data residency. Full low-level design delivered.</p></div>
+        <div class="card"><div class="k">Landing zone</div><h3>Landing zone to production for a public-sector customer</h3><p>CAF-aligned design on the ALZ Accelerator with the Sovereignty Baseline, Microsoft Cloud Security Benchmark and Defender for Cloud, all in Terraform.</p></div>
+        <div class="card"><div class="k">Agent tooling</div><h3>Multi-agent delivery toolchain</h3><p>An internal toolchain of purpose-built MCP servers and skills that produces delivery documents.</p></div>
         <div class="card"><div class="k">Leadership</div><h3>Datacenter operations for a national telecom</h3><p>Owned hosting, co-location and datacenter operations around the clock. Led 4 teams, 27 people. Consolidated 4 facilities into 2 and re-platformed the network core with minimal customer downtime.</p></div>
       </div>
     </div>
@@ -286,9 +287,9 @@
       <div class="label">03 / Public repositories</div>
       <h2>The governance model, in code you can read.</h2>
       <div class="grid">
-        <div class="card"><div class="k">Azure deployment</div><h3>agent-gateway-apim</h3><p>The same governance model as an Azure API Management deployment: Terraform/AVM, Entra app-only identity, validate-JWT, managed identity to the backend. CI-validated and deploy-proven.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-apim" target="_blank" rel="noopener">View repository →</a></div>
-        <div class="card"><div class="k">Design</div><h3>agent-gateway-a2a</h3><p>The HLD, LLD and threat model the gateway work is built on: one governed action surface, least-privilege persona tokens, propose then confirm on writes.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-a2a" target="_blank" rel="noopener">View repository →</a></div>
-        <div class="card"><div class="k">MCP</div><h3>mcp-agent-starter</h3><p>A minimal MCP server with the security model production agents need: per-agent least privilege, an audit log, and a human-confirm gate on writes.</p><a class="more" href="https://github.com/rhinolands/mcp-agent-starter" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">Azure deployment</div><h3>agent-gateway-apim</h3><p>The same governance model as an Azure API Management deployment: Terraform/AVM, Entra app-only identity, validate-JWT, managed identity to the backend. CI-validated.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-apim" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">Design</div><h3>agent-gateway-a2a</h3><p>The HLD, LLD and threat model the gateway work is built on: one governed action surface, per-agent app-only identity, deny by default, and an optional confirm step for dangerous tools.</p><a class="more" href="https://github.com/rhinolands/agent-gateway-a2a" target="_blank" rel="noopener">View repository →</a></div>
+        <div class="card"><div class="k">MCP</div><h3>mcp-agent-starter</h3><p>A minimal MCP server with the security model production agents need: capability checks with deny by default, an audit log, and a two-step propose and confirm on writes.</p><a class="more" href="https://github.com/rhinolands/mcp-agent-starter" target="_blank" rel="noopener">View repository →</a></div>
         <div class="card"><div class="k">Reference</div><h3>azure-ai-platform-reference-architecture</h3><p>A reference pattern for agentic AI on Azure, with a hands-on RAG security-trimming lab that proves retrieval under the user's own identity, including the real failure modes.</p><a class="more" href="https://github.com/rhinolands/azure-ai-platform-reference-architecture" target="_blank" rel="noopener">View repository →</a></div>
         <div class="card"><div class="k">Context engineering</div><h3>agent-knowledge-base</h3><p>An agent-readable knowledge base with a stdlib indexer that lints, chunks for RAG, and emits a capability map.</p><a class="more" href="https://github.com/rhinolands/agent-knowledge-base" target="_blank" rel="noopener">View repository →</a></div>
       </div>
