@@ -7,7 +7,6 @@ Source for [gustavo.rhinojedi.dev](https://gustavo.rhinojedi.dev), the portfolio
 | Path | What it is |
 |---|---|
 | `site/index.html` | The current site. One hand-written HTML file, no build step, no framework. |
-| `index.html` | The previous bundled version, kept for rollback until the new one is live. |
 | `tools/check_site.py` | Pre-publish gate: HTML well-formedness, AI-tell scan of the visible text, leak patterns. |
 
 ## Checks
